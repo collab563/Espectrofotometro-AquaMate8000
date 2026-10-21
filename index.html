@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orion AquaMate 8000 UV-Vis — Interactive Training Simulator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">8000</div>
+    <div class="brand-text">
+      <h1>Orion AquaMate&trade; 8000 UV-Vis</h1>
+      <p id="brandSub">Interactive training simulator &mdash; based on the UV-Vis User Guide</p>
+    </div>
+  </div>
+  <div class="topbar-tools">
+    <button id="btnTutorial" class="tool-btn" aria-pressed="false">
+      <span class="tool-ico">&#9650;</span><span id="btnTutorialTxt">Guided mode</span>
+    </button>
+    <button id="btnReset" class="tool-btn"><span class="tool-ico">&#8635;</span><span id="btnResetTxt">Reset</span></button>
+    <div class="langswitch" role="group" aria-label="Language">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="es">ES</button>
+    </div>
+  </div>
+</header>
+
+<main class="stage">
+
+  <!-- ============ INSTRUMENT ============ -->
+  <section class="instrument-wrap">
+    <div class="instrument" id="instrument">
+
+      <div class="bezel">
+        <div class="lcd-frame">
+          <canvas id="lcd" width="320" height="240"></canvas>
+          <div class="lcd-tutor" id="tutorBubble" hidden></div>
+        </div>
+      </div>
+
+      <div class="fkeys">
+        <button class="fkey" data-key="f1"><span class="ftick"></span></button>
+        <button class="fkey" data-key="f2"><span class="ftick"></span></button>
+        <button class="fkey" data-key="f3"><span class="ftick"></span></button>
+        <button class="fkey" data-key="f4"><span class="ftick"></span></button>
+      </div>
+
+      <div class="body">
+
+      <div class="keypad">
+        <button class="pill keypad-esc" data-key="esc">esc</button>
+        <button class="pill keypad-clear" data-key="clear">clear</button>
+        <button class="pill keypad-enter" data-key="enter">enter</button>
+        <button class="arrowkey keypad-up" data-key="up" aria-label="Up">&#9650;</button>
+        <button class="arrowkey keypad-down" data-key="down" aria-label="Down">&#9660;</button>
+
+        <div class="col-num">
+          <button class="key" data-key="1">1</button>
+          <button class="key" data-key="2">2</button>
+          <button class="key" data-key="3">3</button>
+          <button class="key" data-key="4">4</button>
+          <button class="key" data-key="5">5</button>
+          <button class="key" data-key="6">6</button>
+          <button class="key" data-key="7">7</button>
+          <button class="key" data-key="8">8</button>
+          <button class="key" data-key="9">9</button>
+          <button class="key" data-key="dot">.</button>
+          <button class="key" data-key="0">0</button>
+          <button class="key" data-key="minus">&minus;</button>
+        </div>
+
+        <button class="utilitykey keypad-utility" data-key="utility">utility</button>
+        <button class="utilitykey keypad-test" data-key="test">test</button>
+        <button class="utilitykey keypad-print" data-key="print">print</button>
+      </div>
+
+      <!-- cell positioner: 6-position ring -->
+      <div class="turret" id="turret">
+        <svg class="turret-ring" viewBox="0 0 240 240" aria-hidden="true">
+          <circle cx="120" cy="120" r="92" fill="none" stroke="#4a90d9" stroke-width="6"
+                  stroke-linecap="round" opacity=".9"/>
+        </svg>
+        <div class="tube-icon" aria-hidden="true">
+          <span class="tube-cap"></span><span class="tube-body"></span>
+        </div>
+        <button class="cellbtn cell-b"  data-cell="B" title="Blank position">B</button>
+        <button class="cellbtn cell-1"  data-cell="1" title="Sample position 1">1</button>
+        <button class="cellbtn cell-2"  data-cell="2" title="Sample position 2 (square cuvette)"><i class="cuvette sq"></i>2</button>
+        <button class="cellbtn cell-3"  data-cell="3" title="Sample position 3">3</button>
+        <button class="cellbtn cell-4"  data-cell="4" title="Sample position 4 (long-path cuvette)"><i class="cuvette lg"></i>4</button>
+        <button class="cellbtn cell-5"  data-cell="5" title="Sample position 5">5</button>
+      </div>
+
+      </div><!-- /.body -->
+
+    </div>
+
+    <p class="kbd-hint" id="kbdHint"></p>
+  </section>
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="guide"  id="tabGuide">Guide</button>
+      <button class="tab" data-tab="car"    id="tabCar">Carousel</button>
+      <button class="tab" data-tab="screen" id="tabScreen">Screens</button>
+    </nav>
+
+    <!-- Guide / tutorial -->
+    <div class="panel active" data-panel="guide">
+      <div class="panel-head">
+        <h2 id="guideTitle">Guided mode</h2>
+        <label class="mini-toggle"><input type="checkbox" id="tutorToggle"> <span id="guideToggleTxt">Enabled</span></label>
+      </div>
+      <p class="muted" id="guideIntro"></p>
+      <div id="tutorStep" class="tutor-step" hidden>
+        <div class="tutor-idx"><span id="tutorPos">1</span><span id="tutorOf">/ 0</span></div>
+        <div class="tutor-body">
+          <div class="tutor-text" id="tutorText"></div>
+          <div class="tutor-where" id="tutorWhere"></div>
+        </div>
+        <div class="tutor-nav">
+          <button class="tool-btn sm" id="tutorPrev">&#8592;</button>
+          <button class="tool-btn sm go" id="tutorNext">&#8594;</button>
+          <button class="tool-btn sm" id="tutorExit">&#10005;</button>
+        </div>
+      </div>
+      <div class="mode-list-head" id="modeListHead">Walkthroughs</div>
+      <div class="mode-list" id="modeList"></div>
+    </div>
+
+    <!-- Sample carousel -->
+    <div class="panel" data-panel="car">
+      <div class="panel-head"><h2 id="carTitle">Sample carousel</h2></div>
+      <p class="muted" id="carIntro"></p>
+      <div class="carousel" id="carousel"></div>
+
+      <div class="picker" id="picker" hidden>
+        <div class="picker-head"><span id="pickerTitle"></span><button class="x" id="pickerClose">&times;</button></div>
+        <label class="field">
+          <span id="lblMethod">Method / solution</span>
+          <select id="selMethod"></select>
+        </label>
+        <label class="field">
+          <span id="lblConc">Concentration</span>
+          <input type="range" id="rngConc" min="0" max="100" value="50">
+          <output id="outConc"></output>
+        </label>
+        <button class="primary" id="btnFillCell" data-i18n="placeInCell">Place in cell</button>
+      </div>
+    </div>
+
+    <!-- Screen reference -->
+    <div class="panel" data-panel="screen">
+      <div class="panel-head"><h2 id="refTitle">Screen reference</h2></div>
+      <p class="muted" id="refIntro"></p>
+      <div id="screenList" class="screen-list"></div>
+    </div>
+
+  </aside>
+</main>
+
+<!-- ============ OUTPUT / PRINT PANEL ============ -->
+<section class="outbar">
+  <div class="out-tabs">
+    <button class="out-tab active" data-out="print" id="otPrint">Printer output</button>
+    <button class="out-tab" data-out="log"   id="otLog">Event log</button>
+    <button class="out-tab" data-out="help"  id="otHelp">Key reference</button>
+    <button class="out-tab" data-out="data" id="otData">Saved data</button>
+    <button class="tool-btn sm" id="btnExportData" type="button">Export CSV</button>
+  </div>
+  <pre class="outbox" id="outbox"></pre>
+</section>
+
+<footer class="foot">
+  <span>Educational simulator. Not affiliated with Thermo Fisher Scientific.</span>
+  <span id="footNote"></span>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/data.js"></script>
+<script src="js/lcd.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/screens.js"></script>
+<script src="js/screens2.js"></script>
+<script src="js/tutorial.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
