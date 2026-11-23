@@ -20,9 +20,10 @@ const App = {
   /* --- utility state --- */
   util: {
     printer: 'PC',
-    standby: 'v_standby15',
+    standby: 'v_standbyOff',
     baselineExp: 0,
     beeper: true,
+    printContrast: 50,
     lang: 'English',
     date: { y:2026, m:10, d:20, h:14, min:36, pm:true, fmt24:false },
     calculator: null

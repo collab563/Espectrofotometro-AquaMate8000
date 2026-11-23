@@ -10,7 +10,11 @@ function boot(){
   App.stored = defaultStoredTests();
   App.smartstart = ['Copper','Chlorine'];
   restoreSimulatorState();
-  App.test = newTest('atc_basic');
+  // Open the advanced A-%T-C setup shown in the User Guide reference.
+  App.mode = 'atc_adv';
+  App.test = newTest('atc_adv');
+  App.screen = 'params';
+  App.paramsPage = 'main';
   App.sampleN = 1;
   App.outTab = 'print';
   LCD.init(document.getElementById('lcd'));
@@ -21,6 +25,7 @@ function boot(){
   wireTopbar();
   wireTabs();
   wirePicker();
+  CarouselLab.init();
   wireKeyboard();
   setLang('en');
   paintAll();
@@ -69,6 +74,12 @@ function paintFKeyLabels(){
 /* ---------- input ------------------------------------------------------- */
 function press(k){
   if (!App.power) return;
+  if (k==='utility'){
+    if (App.busy || App.screen==='utility') return;
+    go('utility');
+    renderGuide();
+    return;
+  }
   /* The tutorial tracks the action while the simulated instrument receives it. */
   if (App.tutorOn && Tutor.active) Tutor.handle(k);
   const s = Screens[App.screen] || Screens.mainmenu;
@@ -147,8 +158,12 @@ function currentHolderCells(){
     holder=App.cellcorrState.positioner||'auto6';
   return posCells(holder);
 }
+window.selectCarouselPosition = selectCell;
+window.getAllowedCarouselPositions = ()=>currentHolderCells();
+window.logCarouselEvent = message=>logEvent(message);
 function cellLabel(c){
   const cell = App.cells[c];
+  if (cell && cell.sol==='empty') return t('c_empty');
   if (!cell || cell.sol==='water' || cell.sol===null) return t('c_water');
   const m = METHOD_BY_ID[cell.sol];
   if (m) return (App.lang==='es'? m.nameEs : m.name) + ' ' + fx(cell.conc,2) + ' ' + m.unit;
@@ -197,6 +212,7 @@ function wireTopbar(){
       App.cells = { B:{kind:'vial',sol:'water',conc:0}, '1':{kind:'square',sol:'water',conc:0},
         '2':{kind:'square',sol:'water',conc:0}, '3':{kind:'vial',sol:'water',conc:0},
         '4':{kind:'longpath',sol:'water',conc:0}, '5':{kind:'vial',sol:'water',conc:0} };
+      CarouselLab.reset();
       App.outTab='print'; App.printout.push('Thermo Scientific Orion AquaMate 8000 UV-Vis');
       App.printout.push('Self test complete. Press TEST to begin.');
       paintAll();
@@ -293,9 +309,12 @@ function renderCarousel(){
   const allowed=currentHolderCells();
   host.innerHTML = ids.map(c=>{
     const cell = App.cells[c];
-    const isBlank = cell.sol==='water' || cell.sol===null;
+    const isEmpty = cell.sol==='empty';
+    const isBlank = cell.sol==='water' || cell.sol===null || isEmpty;
     const kind = cell.kind;
-    const shape = kind==='vial'
+    const shape = isEmpty
+      ? '<span class="empty-cuvette"></span>'
+      : kind==='vial'
       ? '<span class="vial'+(isBlank?'':' filled')+'"></span>'
       : '<span class="cuv2" style="--fill:'+(isBlank?'transparent':fillColor(cell))+'"></span>';
     const conc = isBlank ? '' : fx(cell.conc,2);
@@ -313,10 +332,11 @@ function renderCarousel(){
   document.querySelectorAll('[data-cell]').forEach(e=>{
     const c = e.dataset.cell;
     e.disabled=!allowed.includes(c);
-    e.classList.toggle('has-sample', !(App.cells[c].sol==='water'||App.cells[c].sol===null));
+    e.classList.toggle('has-sample', !(App.cells[c].sol==='water'||App.cells[c].sol===null||App.cells[c].sol==='empty'));
     e.classList.toggle('is-blank', App.cells[c].sol==='water'||App.cells[c].sol===null);
     e.classList.toggle('in-beam', c===App.beamCell);
   });
+  if(window.CarouselLab) CarouselLab.render();
 }
 function fillColor(cell){
   const m = METHOD_BY_ID[cell.sol];
@@ -327,6 +347,7 @@ function fillColor(cell){
   const sat = 55 + Math.min(35, n*35);
   return 'hsl('+hue+', '+sat+'%, '+light+'%)';
 }
+window.carouselFillColor = fillColor;
 
 let pickerCell = '1';
 function openPicker(c){
@@ -352,6 +373,13 @@ function openPicker(c){
   document.getElementById('lblConc').textContent = t('concLabel');
   document.getElementById('btnFillCell').textContent = t('placeInCell');
 }
+window.openCarouselCellEditor = function(c){
+  if(!selectCell(c)) return;
+  const tab=document.querySelector('.tab[data-tab="car"]');
+  if(tab) tab.click();
+  openPicker(c);
+  window.setTimeout(()=>document.getElementById('picker').scrollIntoView({behavior:'smooth',block:'center'}),0);
+};
 function wirePicker(){
   document.getElementById('pickerClose').addEventListener('click', ()=>{
     document.getElementById('picker').hidden = true;
@@ -366,6 +394,7 @@ function wirePicker(){
                  parseFloat(document.getElementById('rngConc').max);
     App.cells[c].sol = id;
     App.cells[c].conc = Math.round(frac*max*1000)/1000;
+    delete App.cells[c].empty;
     App.cells[c].kind = (id==='water') ? (c==='B'?'vial':'square') : (c==='4'?'longpath':(c==='B'?'vial':'square'));
     logEvent('Cell '+c+' ← '+cellLabel(c));
     document.getElementById('picker').hidden = true;

@@ -64,9 +64,12 @@ function commitEntry(){
   else back();
 }
 function setMenu(cfg){
+  const parentSel=App.sel;
   App.menu = Object.assign({ title:'', opts:[], sel:0, value:null }, cfg);
+  if(App.menu.overlay){ App.menu.parentSel=parentSel; App.sel=parentSel; }
+  else App.sel=0;
   App.nav.push(App.screen);
-  App.screen = 'menu'; App.sel = 0; paint();
+  App.screen = 'menu'; paint();
 }
 function pickMenu(i){
   const m = App.menu; if(!m) return;
@@ -126,6 +129,7 @@ function P(key, label, type, get, set, extra){
   return p;
 }
 const NL = n => String(n).padStart(n>1?2:1,'0');
+const ATC_ADV_UNITS = ['C','ppm','ppb','g/L','mg/L','mg/mL','μg/mL','M/L','mM/L','IU','pM/μL','[Unit] ------'];
 
 /* =====================================================================
    PARAMETER SPECIFICATIONS  (labels match the User Guide)
@@ -161,7 +165,7 @@ function paramSpec(){
       P('delay','p_delay','time', ()=>T.delay, v=>{T.delay=v;}),
       P('concStd','p_concStd','num', ()=>T.concStd, v=>{T.concStd=v;}, {min:0,max:1e9,dec:3}),
       P('factor','p_factor','num', ()=>T.factor, v=>{T.factor=v;}, {min:0,max:1e9,dec:4}),
-      P('units','p_units','menu', ()=>T.units, v=>{T.units=v;}, {opts:UNITS}),
+      P('units','p_units','menu', ()=>T.units, v=>{T.units=v;}, {opts:ATC_ADV_UNITS}),
       P('positioner','p_positioner','menu',
         ()=>t((POSITIONERS.find(p=>p.id===T.positioner)||{}).label||''),
         v=>{T.positioner=v;},
@@ -409,10 +413,8 @@ Screens.utility = {
       ['u_lampLife','0.87%'], ['u_screenContrast',''], ['u_printContrast',''],
       ['u_storedDir',''], ['u_usbFiles',''], ['u_calculator','']
     ];
-    const N = rows.length, win = LCD.BODY_ROWS;
-    const top = Math.max(0, Math.min(App.sel-win+1, N-win));
     LCD.header(t('u_utility'), clockString()+'  '+dateString());
-    LCD.rows(rows.slice(top, top+win).map((r,i)=>({label:t(r[0]), value:r[1], hi:(top+i)===App.sel})), 2);
+    LCD.rows(rows.map((r,i)=>({label:t(r[0]), value:r[1], hi:i===App.sel})), 1);
     LCD.status(t('u_selItem'));
     LCD.fkeys(['','','','']);
   },
@@ -431,13 +433,14 @@ Screens.utility = {
               get:i=>['v_standbyOff','v_standby5','v_standby10','v_standby15','v_standby20','v_standby30','v_standby60'][i],
               onPick:v=>{App.util.standby=v; back();}}); break;
         case 5: setEntry({label:t('u_baselineExp'), value:App.util.baselineExp, min:0, max:999,
-              hint:'Entry Baseline Expiration (0 - 999)',
+              hint:'Enter time (00:10 - 24:00, 0=OFF)',
               onAccept:v=>{App.util.baselineExp=v; back();}}); break;
         case 6: App.util.beeper=!App.util.beeper; App.sel=6; paint(); break;
         case 7: setLanguageMenu(); break;
         case 9: contrastScreen(); break;
-        case 10: setEntry({label:t('u_printContrast'), value:50, min:0, max:100,
-              hint:'Entry Printout Contrast (0 - 100)', onAccept:()=>back()}); break;
+        case 10: setEntry({label:t('u_printContrast'), value:App.util.printContrast, min:0, max:100,
+              hint:'Entry Printout Contrast (0 - 100)',
+              onAccept:v=>{App.util.printContrast=v; back();}}); break;
         case 11: go('stored'); break;
         case 12: go('usb'); break;
         case 13: go('calculator'); break;
@@ -494,13 +497,28 @@ Screens.datetime = {
 };
 
 function contrastScreen(){
-  App.sel = Math.round(App.contrast*10);
+  App.contrastParentSel=App.sel;
   LCD.setContrast(App.contrast);
-  go('contrast');
+  App.nav.push(App.screen);
+  App.screen='contrast';
+  App.sel=0;
+  paint();
 }
 Screens.contrast = {
   draw(){
-    LCD.header(t('u_screenContrast'), clockString()+'  '+dateString());
+    const savedSel=App.sel;
+    App.sel=App.contrastParentSel===undefined?9:App.contrastParentSel;
+    Screens.utility.draw();
+    App.sel=savedSel;
+    const x=38,y=126,w=244,h=84;
+    LCD.rect(x,y,w,h,LCD.paper());
+    LCD.frame(x,y,w,h,LCD.ink());
+    LCD.frame(x+3,y+3,w-6,h-6,LCD.ink());
+    LCD.text(x+w/2,y+14,'Press ↑ for darker contrast',{size:12,align:'center'});
+    LCD.text(x+w/2,y+36,'Press ↓ for lighter contrast',{size:12,align:'center'});
+    LCD.text(x+w/2,y+58,'Press ESC to exit',{size:12,align:'center'});
+    LCD.fkeys(['','↑','↓','']);
+    return;
     const pct = String(Math.round(App.contrast*100))+'%';
     LCD.cell(0, 4, '  ' + '[' + ' '.repeat(Math.max(0, 10-pct.length)) + pct + ']');
     LCD.cell(0, 5, 'Contrast');
@@ -508,11 +526,20 @@ Screens.contrast = {
     LCD.fkeys(['','','','']);
   },
   key(k){
-    if (k==='up')   { App.sel=Math.min(10,App.sel+1); App.contrast=App.sel/10; }
-    if (k==='down') { App.sel=Math.max(0,App.sel-1); App.contrast=App.sel/10; }
-    LCD.setContrast(App.contrast);
-    if (k==='esc') back();
-    else paint();
+    if (k==='up') App.contrast=Math.min(1,Math.round((App.contrast+0.1)*10)/10);
+    if (k==='down') App.contrast=Math.max(0,Math.round((App.contrast-0.1)*10)/10);
+    if (k==='up'||k==='down'){
+      LCD.setContrast(App.contrast);
+      paint();
+      return;
+    }
+    if (k==='esc'){
+      const parentSel=App.contrastParentSel;
+      App.contrastParentSel=undefined;
+      back();
+      App.sel=parentSel;
+      paint();
+    }
   }
 };
 
@@ -651,7 +678,7 @@ Screens.calculator = {
 /* ---------- alphanumeric name entry ------------------------------------ */
 const NAME_CHARSETS = [
   'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
-  'abcdefghijklmnopqrstuvwxyz _*/()#'
+  'abcdefghijklmnopqrstuvwxyz _*/μ()#'
 ];
 function moveNameCursor(n, step){
   const topLength=NAME_CHARSETS[0].length;
@@ -679,8 +706,8 @@ Screens.nameentry = {
     LCD.cell(n.col, selectedRow, selectedChar, {color:LCD.paper()});
 
     LCD.cell(0, 8, t('e_newName') + ' ' + n.buf);
-    LCD.cell(0, 14, t('e_nameSelectChar'));
-    LCD.cell(0, 15, t('e_nameAcceptInstruction').replace('{key}',t('k_acceptName')));
+    LCD.cell(0, 14.8, t('e_nameSelectChar'));
+    LCD.cell(0, 15.7, t('e_nameAcceptInstruction').replace('{key}',t('k_acceptName')));
     LCD.fkeys([t('k_deleteName'), t('k_deleteChar'), t('k_addChar'), t('k_acceptName')]);
   },
   key(k){
@@ -720,7 +747,15 @@ Screens.params = {
     const rows=list.map((p,i)=>({label:t(p.label),
       value:p.type==='action'||p.type==='more'||p.type==='const'?'':p.format?p.format(p.get()):''+p.get(),
       hi:i===App.sel}));
-    LCD.rows(rows, App.mode==='multi'||((App.mode==='ratio'||App.mode==='ptnet')&&page==='main')?3:2);
+    const moreIndex=list.findIndex(p=>p.key==='more');
+    if(App.mode==='atc_adv' && page==='main' && moreIndex>=0){
+      LCD.rows(rows.slice(0,moreIndex),2);
+      const row=13.77, moreLabel=t(list[moreIndex].label);
+      if(App.sel===moreIndex) LCD.rect(0,row*LCD.CH,LCD.W,LCD.CH,LCD.ink());
+      LCD.cell(0,row,moreLabel,{color:App.sel===moreIndex?LCD.paper():LCD.ink()});
+    }else{
+      LCD.rows(rows, App.mode==='multi'||((App.mode==='ratio'||App.mode==='ptnet')&&page==='main')?3:2);
+    }
     LCD.status(App.notice || t('u_selItemChange'));
     LCD.fkeys(fkeysFor(App.mode, T));
   },
@@ -841,7 +876,7 @@ function editParam(p, list){
     case 'num':
       setEntry({label:t(p.label), value:Number(p.get())||0, min:p.min, max:p.max,
         decimals:p.dec||0, integer:p.key==='nSamples'||p.key==='id', unit:p.unit||'',
-        hint:'Entry '+t(p.label).toLowerCase()+' ('+p.min+' - '+p.max+')',
+        hint:'Enter '+t(p.label)+' ('+p.min+' - '+p.max+')',
         onAccept:v=>{ p.set(v); logEvent(t(p.label)+' = '+v+(p.unit||'')); back(); }});
       break;
     case 'toggle':
@@ -851,10 +886,20 @@ function editParam(p, list){
     case 'toggle3':
     case 'menu':
       if (!p.opts) return;
-      setMenu({title:t(p.label), opts:p.opts,
+      {
+        const overlay=App.mode==='atc_adv' && p.key==='units';
+        const parentSel=App.sel;
+        setMenu({title:t(p.label), opts:p.opts,
+        sel:overlay?0:Math.max(0,p.opts.indexOf(p.get())), overlay,
+        fkeys:overlay?['','',t('k_editUnit'),'']:null,
         get:i=> (p.labels? p.labels(p.opts[i]) : p.opts[i]),
-        onPick:v=>{ if(p.key==='positioner') setPositioner(T,v); else p.set(v);
-          logEvent(t(p.label)+' = '+v); back(); }});
+        onPick:v=>{ if(p.key==='positioner') setPositioner(T,v);
+          else if(p.key==='units' && v==='[Unit] ------') p.set(T.customUnit||T.units);
+          else p.set(v);
+          logEvent(t(p.label)+' = '+(T.units||v)); back();
+          if(overlay){App.sel=parentSel;paint();}
+        }});
+      }
       break;
     case 'menu':
       setMenu({title:t(p.label), opts:p.opts,
@@ -1011,10 +1056,17 @@ Screens.entry = {
     if (parent && parent.draw){ try{ parent.draw(); }catch(e){} }
     else LCD.header('','');
     const e = App.entry || {label:'',buffer:'',hint:''};
+    if (!e.text){
+      LCD.fkeys(['','','','']);
+      const value = e.pristine ? '' : String(e.buffer);
+      const prompt = e.error || e.hint || ('Enter '+e.label);
+      LCD.entryPopup('Entry: '+value, prompt);
+      return;
+    }
+    LCD.fkeys(['','','','']);
     const lines = [String(e.buffer)];
     if (e.label) lines.unshift('');
     LCD.popup('Entry', [e.label? 'Enter '+e.label : '', String(e.buffer), e.error || e.hint]);
-    LCD.fkeys(['','','','']);
   },
   key(k){
     const e = App.entry;
@@ -1043,6 +1095,24 @@ function drawParent(){ /* superseded by Screens.entry.draw */ }
 Screens.menu = {
   draw(){
     const m = App.menu || {title:'',opts:[],sel:0,get:i=>''};
+    if(m.overlay){
+      const parent=Screens[App.nav[App.nav.length-1]];
+      if(parent&&parent.draw){try{parent.draw();}catch(e){}}
+      const x=116,y=19,w=202,h=190,col=18;
+      LCD.rect(x,y,w,h,LCD.paper());
+      LCD.frame(x,y,w,h,LCD.ink());
+      LCD.frame(x+3,y+3,w-6,h-6,LCD.ink());
+      m.opts.forEach((opt,i)=>{
+        const row=2+i;
+        const label=m.get?m.get(i):String(opt);
+        if(i===m.sel) LCD.bar(row,label,{col,len:label.length});
+        else LCD.cell(col,row,label);
+      });
+      LCD.cell(col,14,'Press ↑ or ↓ to select');
+      LCD.cell(col,15,'Press ENTER');
+      LCD.fkeys(m.fkeys||['','','','']);
+      return;
+    }
     const n = m.opts.length;
     const win = LCD.BODY_ROWS-3;
     const start = Math.max(0, Math.min(m.sel-win+1, n-win));
@@ -1058,10 +1128,22 @@ Screens.menu = {
   key(k){
     const m = App.menu; if(!m) return;
     const n = m.opts.length;
-    if (k==='up')   { m.sel=(m.sel+n-1)%n; App.sel=m.sel; paint(); return; }
-    if (k==='down') { m.sel=(m.sel+1)%n; App.sel=m.sel; paint(); return; }
+    if (k==='up')   { m.sel=(m.sel+n-1)%n; App.sel=m.overlay?m.parentSel:m.sel; paint(); return; }
+    if (k==='down') { m.sel=(m.sel+1)%n; App.sel=m.overlay?m.parentSel:m.sel; paint(); return; }
     if (k==='enter'){ pickMenu(m.sel); return; }
-    if (k==='esc'){ App.menu=null; back(); }
+    if (m.overlay && k==='f3'){
+      const customIndex=m.opts.indexOf('[Unit] ------');
+      openName('Edit [Unit]',App.test.customUnit||'',8,nm=>{
+        App.test.customUnit=nm; App.test.units=nm;
+        if(customIndex>=0) App.menu.sel=customIndex;
+      });
+      return;
+    }
+    if (k==='esc'){
+      const parentSel=m.parentSel;
+      App.menu=null; back();
+      if(m.overlay){App.sel=parentSel;paint();}
+    }
   }
 };
 

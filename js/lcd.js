@@ -16,9 +16,9 @@ const LCD = (function(){
   const BADGE_Y  = 14;
   const BODY_Y   = 28;
   const BODY_ROWS= 13;
-  const STATUS_Y = 197;
-  const FKEY_Y   = 210;
-  const FKEY_H   = 29;
+  const STATUS_Y = 203;
+  const FKEY_Y   = 216;
+  const FKEY_H   = 24;
 
   let cv, ctx, contrast = 1;
 
@@ -120,15 +120,19 @@ const LCD = (function(){
     rect(x, BADGE_Y, W - x, CH, ink());
     cell(textCol, 1, text, {color:'#ffffff'});
   }
-  function status(text){
-    cell(0, Math.round(STATUS_Y/CH), text);
+  function status(str){
+    text(0, STATUS_Y, str, {size:12});
   }
   function fkeys(list){
     if (typeof App !== 'undefined') App.lastFkeys = list || [];
-    frame(0, FKEY_Y, W, FKEY_H, ink());
+    /* Clear old function-key captions before drawing the new footer. */
+    ctx.fillStyle=paper(); ctx.fillRect(0,FKEY_Y,W,H-FKEY_Y);
+    const footerY=FKEY_Y;
+    const footerH=FKEY_H;
+    frame(0, footerY, W, footerH, ink());
     const bw = W/4;
     for (let i=0;i<4;i++){
-      if (i>0) ctx.fillStyle=ink(), ctx.fillRect(Math.round(i*bw), FKEY_Y, 1, FKEY_H);
+      if (i>0) ctx.fillStyle=ink(), ctx.fillRect(Math.round(i*bw), footerY, 1, footerH);
       const lab = list && list[i];
       if (!lab) continue;
       const words = String(lab).split(/\s+/);
@@ -146,8 +150,8 @@ const LCD = (function(){
       const cx = i*bw + bw/2;
       ctx.save(); ctx.font='bold 11px '+FONT; ctx.textAlign='center';
       ctx.fillStyle=ink(); ctx.textBaseline='top';
-      ctx.fillText(l1, cx, FKEY_Y+4);
-      if (l2) ctx.fillText(l2, cx, FKEY_Y+15);
+      ctx.fillText(l1, cx, footerY+(l2?1:6));
+      if (l2) ctx.fillText(l2, cx, footerY+12);
       ctx.restore();
     }
   }
@@ -165,6 +169,28 @@ const LCD = (function(){
     cell(1, Math.round((y)/CH)+1, title, {size:11});
     let r = Math.round(y/CH)+2;
     lines.forEach(l=>{ cell(2, r, l); r++; });
+  }
+
+  /* Numeric entry panel follows the instrument guide: a two-line box at
+     the bottom of the LCD, with the live entry on the first line. */
+  function entryPopup(entryLine, prompt){
+    const x=2, y=174, w=W-4, h=36;
+    ctx.save();
+    ctx.fillStyle=paper();
+    ctx.fillRect(x,y,w,h);
+    ctx.strokeStyle=ink(); ctx.lineWidth=2;
+    ctx.strokeRect(x+1,y+1,w-2,h-2);
+    ctx.lineWidth=1;
+    ctx.strokeRect(x+4.5,y+4.5,w-8,h-8);
+    ctx.restore();
+    const prefix='Entry: ';
+    const value=entryLine.slice(prefix.length);
+    const active=value?value.length-1:0;
+    const activeCol=2+prefix.length+active;
+    cell(2,14,prefix+(value?value.slice(0,-1):''),{dy:-3});
+    rect(activeCol*CW,14*CH-4,CW,CH,ink());
+    if(value) cell(activeCol,14,value.slice(-1),{color:paper(),dy:-3});
+    cell(2,15,prompt,{dy:-3});
   }
 
   /* --- list rows ------------------------------------------------------- */
@@ -294,7 +320,7 @@ const LCD = (function(){
   }
 
   return { init, clear, text, cell, cellLen, bar, header, badge, status, fkeys,
-           popup, rows, graph, table, rect, frame, texture, hLine, vLine,
+           popup, entryPopup, rows, graph, table, rect, frame, texture, hLine, vLine,
            setContrast, ink, paper, mix, fmtTick,
            W:W, H:H, CW:CW, CH:CH, COLS:COLS, ROWS:ROWS, BODY_Y:BODY_Y,
            BODY_ROWS:BODY_ROWS, STATUS_Y:STATUS_Y, FKEY_Y:FKEY_Y };

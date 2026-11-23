@@ -73,12 +73,12 @@ h1,h2,h3{margin:0;font-weight:600}
 
 /* ---------------- stage ---------------- */
 .stage{
-  display:grid;grid-template-columns:minmax(0,1fr) 372px;gap:22px;
+  display:grid;grid-template-columns:minmax(0,640px) minmax(0,1fr);gap:18px;
   padding:22px;align-items:start;max-width:1500px;margin:0 auto;
 }
 
 /* ---------------- instrument ---------------- */
-.instrument-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+.instrument-wrap{display:flex;flex-direction:column;align-items:flex-start;gap:12px}
 
 .instrument{
   position:relative;
@@ -249,10 +249,76 @@ h1,h2,h3{margin:0;font-weight:600}
 
 .kbd-hint{margin:0;color:var(--ui-mut);font-size:12px;text-align:center;max-width:760px}
 
-/* ---------------- sidebar ---------------- */
+/* ---------------- direct-manipulation carousel lab ---------------- */
+.carousel-lab{
+  min-width:0;padding:15px;background:linear-gradient(160deg,#1a222d,#121820 68%);
+  border:1px solid #344253;border-radius:15px;box-shadow:0 16px 36px rgba(0,0,0,.28)
+}
+.lab-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+.lab-kicker,.lab-card-kicker{font-size:10px;font-weight:800;letter-spacing:1.1px;color:#8ca0b8}
+.lab-header h2{font-size:18px;margin:3px 0 2px;letter-spacing:.1px}
+.lab-header p{font-size:11.5px;color:var(--ui-mut);margin:0;line-height:1.4}
+.lab-live{display:flex;align-items:center;gap:7px;padding:6px 9px;background:#111923;border:1px solid #304052;border-radius:999px;white-space:nowrap;color:#c4d5e7;font-size:10px;font-weight:600}
+.lab-live-dot{width:7px;height:7px;border-radius:50%;background:#51ce91;box-shadow:0 0 9px rgba(81,206,145,.55)}
+.lab-live.warn .lab-live-dot{background:#efa84b;box-shadow:0 0 9px rgba(239,168,75,.55)}
+.lab-viewport{overflow:hidden;background:radial-gradient(ellipse at 42% 42%,#202c39 0,#111821 72%);border:1px solid #2a394b;border-radius:12px}
+#labSvg{display:block;width:100%;height:auto;touch-action:none;user-select:none}
+#labSvg text{pointer-events:none}
+#labSvg [data-part]{user-select:none;outline:none}
+#labSvg .lab-slot{cursor:grab;transition:filter .14s,opacity .14s}
+#labSvg .lab-slot:active,#labSvg [data-dragging="true"]{cursor:grabbing}
+#labSvg .lab-slot:hover{filter:brightness(1.22)}
+#labSvg .lab-slot.unavailable{opacity:.3;cursor:not-allowed}
+#labSvg .lab-slot.selected .slot-outline{stroke:#ffc56c;stroke-width:3}
+#labSvg .lab-slot.held{opacity:.38}
+#labSvg .slot-label{font:800 12px 'Segoe UI',Arial,sans-serif;fill:#f5f8fc;text-anchor:middle;dominant-baseline:middle}
+#labSvg .slot-sub{font:8px 'Segoe UI',Arial,sans-serif;fill:#c1cfdd;text-anchor:middle}
+#labSvg .lab-glass{fill:#b6e6f3;fill-opacity:.23;stroke:#dcf5fc;stroke-width:2}
+#labSvg .lab-liquid{fill:var(--liquid,#4d96d0);fill-opacity:.82}
+#labSvg .lab-rotor{transform-box:view-box;transform-origin:330px 235px;transition:transform .52s cubic-bezier(.2,.8,.2,1)}
+#labSvg .lab-human-arm{filter:url(#humanShadow);pointer-events:none}
+#labSvg .lab-hand{cursor:grab;pointer-events:all;touch-action:none}
+#labSvg .lab-hand:hover{filter:brightness(1.08)}
+#labSvg .scene-label{font:800 12px 'Segoe UI',Arial,sans-serif;fill:#c1d1df;letter-spacing:1px}
+#labSvg .scene-micro{font:700 9px 'Segoe UI',Arial,sans-serif;fill:#aabccc;text-anchor:middle;letter-spacing:.35px}
+#labSvg .beam-label{font:900 10px 'Segoe UI',Arial,sans-serif;fill:#ffe0a2;text-anchor:middle;letter-spacing:1.1px}
+#labSvg .held-label{font:900 9px 'Segoe UI',Arial,sans-serif;fill:#a7e5ff;text-anchor:middle;letter-spacing:.8px}
+#labSvg .interactive-halo{fill:rgba(120,190,240,.08);stroke:rgba(142,201,239,.42);stroke-width:1.5;stroke-dasharray:4 4}
+#labSvg .lab-door-hit,#labSvg .lab-screw-hit,#labSvg .lab-holder-hit,#labSvg .lab-pin-hit{cursor:pointer}
+#labSvg [data-part="holder"]{cursor:grab}
+#labSvg [data-part]:focus-visible{filter:brightness(1.25)}
+#labSvg .lab-screw-hit:hover .screw-head,#labSvg .lab-door-hit:hover .door-handle{filter:brightness(1.3)}
+#labSvg .lab-install-target{fill:rgba(98,208,155,.06);stroke:rgba(98,208,155,.58);stroke-width:2;stroke-dasharray:8 6}
+.lab-legend{display:flex;flex-wrap:wrap;gap:14px;padding:9px 11px 7px;color:#a3b3c5;font-size:10px}
+.lab-legend span{display:flex;align-items:center;gap:6px}
+.lab-legend i{display:inline-block;width:9px;height:9px;border-radius:50%}
+.legend-beam{background:#f6b84a;box-shadow:0 0 8px #f6b84a}
+.legend-selected{border:2px solid #ffc56c}
+.legend-held{background:#86d6ff}
+.lab-console{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.lab-selected-card,.lab-ready-card{min-width:0;padding:10px 11px;background:#111923;border:1px solid #2a3b4f;border-radius:10px}
+.lab-selected-main{display:flex;align-items:center;gap:9px;margin:4px 0}
+.lab-selected-main>strong{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:#24394b;color:#ffca72;font-size:17px}
+.lab-selected-main>div{display:flex;flex-direction:column;min-width:0}
+.lab-selected-main b{font-size:12px;color:#e5edf6}
+.lab-selected-main span{font-size:10.5px;color:#91b7d7}
+.lab-beam-note{font-size:10px;color:#8da1b6;line-height:1.35}
+.lab-ready{font-size:10px;line-height:1.4;color:#b2c1d1;padding-top:5px}
+.lab-ready ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 8px}
+.lab-ready li{display:flex;gap:5px;align-items:flex-start}
+.lab-ready .ok{color:#74d69b}.lab-ready .pending{color:#edb35b}
+.lab-ready .lab-ready-title{grid-column:1/-1;color:#e4edf5}
+.lab-mouse-help{padding:9px 11px;background:#19222d;border:1px solid #2a3849;border-radius:9px;color:#aebfd0;font-size:10px;line-height:1.45}
+.lab-mouse-help b{color:#e1edf7}
+.lab-feedback{min-height:42px;padding:9px 11px;background:#111923;border-left:3px solid #51a1e6;border-radius:6px;color:#d4e2ef;font-size:10px;line-height:1.42;display:flex;align-items:center}
+.lab-feedback.warn{border-left-color:#e8a546;color:#f3d9ad}
+.lab-footnote{margin-top:9px;color:#8194a9;font-size:9px;line-height:1.4}
+
+/* ---------------- guide / carousel / screen panels ---------------- */
 .sidebar{
+  width:calc(100% - 44px);max-width:1500px;margin:0 auto 18px;
   background:var(--ui-panel);border:1px solid var(--ui-line);border-radius:14px;
-  overflow:hidden;position:sticky;top:80px;max-height:calc(100vh - 104px);display:flex;flex-direction:column;
+  overflow:hidden;position:static;display:flex;flex-direction:column;
 }
 .tabs{display:flex;border-bottom:1px solid var(--ui-line);flex:0 0 auto}
 .tab{
@@ -260,7 +326,7 @@ h1,h2,h3{margin:0;font-weight:600}
   font-weight:600;font-size:13px;border-bottom:2px solid transparent;
 }
 .tab.active{color:var(--ui-txt);border-bottom-color:var(--acc);background:rgba(74,144,217,.07)}
-.panel{display:none;padding:16px;overflow-y:auto;flex:1 1 auto}
+.panel{display:none;padding:16px;overflow-y:auto;flex:1 1 auto;max-height:560px}
 .panel.active{display:block}
 .panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
 .panel-head h2{font-size:15px}
@@ -290,7 +356,7 @@ h1,h2,h3{margin:0;font-weight:600}
 .mode-btn .mi{color:var(--ui-mut);font-size:11px}
 
 /* carousel panel */
-.carousel{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+.carousel{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px;margin-bottom:14px}
 .cellcard{
   background:var(--ui-panel2);border:1px solid var(--ui-line);border-radius:10px;padding:10px 8px;
   text-align:center;transition:.14s;
@@ -306,6 +372,8 @@ h1,h2,h3{margin:0;font-weight:600}
 .vial::after{content:"";position:absolute;left:-2px;right:-2px;top:-7px;height:5px;background:#8fb8d8;border-radius:2px}
 .vial.filled::before{content:"";position:absolute;left:1px;right:1px;bottom:1px;top:14px;background:var(--fill,#c98a3a);border-radius:2px}
 .cuv2{width:30px;height:26px;border:2px solid #8fb8d8;background:var(--fill,transparent);border-radius:2px}
+.empty-cuvette{width:25px;height:36px;border:2px dashed #657a8d;border-radius:3px;position:relative;opacity:.7}
+.empty-cuvette::after{content:"";position:absolute;left:4px;right:4px;top:15px;border-top:2px solid #657a8d}
 
 .picker{background:var(--ui-panel2);border:1px solid var(--ui-line);border-radius:11px;padding:13px}
 .picker-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;margin-bottom:11px}
@@ -353,12 +421,11 @@ h1,h2,h3{margin:0;font-weight:600}
 @media (max-width:1340px){
   :root{--scale:1.2}
   .instrument{width:max(calc(320px*var(--scale) + 86px), 640px);padding:20px 22px 24px}
-  .stage{grid-template-columns:minmax(0,1fr) 330px}
-  .sidebar{max-height:calc(100vh - 96px)}
+  .stage{grid-template-columns:minmax(0,640px) minmax(0,1fr)}
 }
-@media (max-width:1080px){
+@media (max-width:1260px){
   .stage{grid-template-columns:minmax(0,1fr)}
-  .sidebar{position:static;max-height:none}
+  .instrument-wrap{align-items:center}
 }
 @media (max-width:760px){
   :root{--scale:1.2}
@@ -370,6 +437,7 @@ h1,h2,h3{margin:0;font-weight:600}
   .tool-btn{padding:7px 9px;font-size:12px}
   .lang-btn{padding:7px 10px;font-size:12px}
   .stage{padding:16px 12px}
+  .sidebar{width:calc(100% - 24px)}
   .instrument-wrap{width:100%;min-width:0}
   .instrument{width:max(calc(320px*var(--scale) + 40px), 478px);border-radius:26px 26px 18px 110px/26px 26px 88px 110px;padding:14px 12px 18px}
   .body{height:287px;padding-top:28px}
@@ -389,6 +457,16 @@ h1,h2,h3{margin:0;font-weight:600}
   .cell-b{left:0;top:64px}.cell-1{left:32px;bottom:9px}.cell-2{right:32px;bottom:9px}
   .cell-3{right:0;top:64px}.cell-4{right:32px;top:9px}.cell-5{left:32px;top:9px}
   .brand-text p{display:none}
+  .lab-header{flex-direction:column}
+  .carousel{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:520px){
+  .lab-viewport{margin:0 -5px}
+  .lab-console{grid-template-columns:minmax(0,1fr)}
+  .lab-ready ul{grid-template-columns:minmax(0,1fr)}
+  .lab-live{white-space:normal}
+  .lab-legend{font-size:9px;gap:7px}
+  .panel{padding:12px}
 }
 /* Scale the whole device as one unit on narrow phones. This keeps the LCD,
    function keys and keypad in their original proportions without clipping. */

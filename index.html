@@ -101,8 +101,47 @@
     <p class="kbd-hint" id="kbdHint"></p>
   </section>
 
-  <!-- ============ SIDEBAR ============ -->
-  <aside class="sidebar">
+  <!-- ============ INTERACTIVE CELL-CHANGER LAB ============ -->
+  <section class="carousel-lab" id="carouselLab" aria-labelledby="labTitle">
+    <header class="lab-header">
+      <div>
+        <div class="lab-kicker" id="labKicker">HANDS-ON TRAINING</div>
+        <h2 id="labTitle">Cell changer workshop</h2>
+        <p id="labIntro">Reach into the chamber and handle the cuvettes and holder with the mouse.</p>
+      </div>
+      <div class="lab-live" id="labLive"><span class="lab-live-dot"></span><span id="labLiveText">Door open · access to cells</span></div>
+    </header>
+
+    <div class="lab-viewport">
+      <svg id="labSvg" viewBox="0 0 800 500" role="application" aria-label="Interactive sample chamber with a human arm and six-position cell holder"></svg>
+      <div class="lab-legend">
+        <span><i class="legend-beam"></i><span id="labLegendBeam">Optical beam</span></span>
+        <span><i class="legend-selected"></i><span id="labLegendSelected">Selected position</span></span>
+        <span><i class="legend-held"></i><span id="labLegendHeld">Held by hand</span></span>
+      </div>
+    </div>
+
+    <div class="lab-console">
+      <div class="lab-selected-card">
+        <div class="lab-card-kicker" id="labSelectedKicker">ACTIVE POSITION</div>
+        <div class="lab-selected-main"><strong id="labSelectedCell">B</strong><div><b id="labSelectedName">Blank position</b><span id="labSelectedContents">Distilled water</span></div></div>
+        <div class="lab-beam-note" id="labBeamNote">The selected cuvette indexes into the optical path.</div>
+      </div>
+      <div class="lab-ready-card">
+        <div class="lab-card-kicker" id="labReadyHeading">MEASUREMENT SETUP</div>
+        <div class="lab-ready" id="labReady"></div>
+      </div>
+      <div class="lab-mouse-help" id="labMouseHelp"></div>
+      <div class="lab-feedback" id="labFeedback" aria-live="polite"></div>
+    </div>
+
+    <div class="lab-footnote" id="labFootnote">Training model: the real cell changer indexes the selected cuvette automatically; the arm is a learning aid.</div>
+  </section>
+
+</main>
+
+<!-- ============ GUIDE / CAROUSEL / SCREEN REFERENCE ============ -->
+<section class="sidebar" aria-label="Training guide and reference panels">
 
     <nav class="tabs" role="tablist">
       <button class="tab active" data-tab="guide"  id="tabGuide">Guide</button>
@@ -161,8 +200,7 @@
       <div id="screenList" class="screen-list"></div>
     </div>
 
-  </aside>
-</main>
+  </section>
 
 <!-- ============ OUTPUT / PRINT PANEL ============ -->
 <section class="outbar">
@@ -188,6 +226,7 @@
 <script src="js/screens.js"></script>
 <script src="js/screens2.js"></script>
 <script src="js/tutorial.js"></script>
+<script src="js/carousel-lab.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

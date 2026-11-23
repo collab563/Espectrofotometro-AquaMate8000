@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <style>
+            .leaflet-div-icon.fiesta-marker-wrapper { border: 0; background: transparent; }
+            .fiesta-marker-shell { position: relative; width: 38px; height: 44px; }
+            .fiesta-marker-pin {
+                position: absolute; top: 1px; left: 4px; width: 30px; height: 30px;
+                border: 2px solid #fff; border-radius: 50% 50% 50% 0;
+                box-shadow: 0 2px 5px #14231f70; transform: rotate(-45deg);
+            }
+            .fiesta-marker-pin .fa {
+                position: absolute; top: 7px; left: 7px; color: #fff;
+                font-size: 12px; transform: rotate(45deg);
+            }
+            .fiesta-marker-status {
+                position: absolute; right: -1px; bottom: -1px; width: 14px; height: 14px;
+                border: 2px solid #fff; border-radius: 50%;
+                box-shadow: 0 1px 3px #14231f80;
+            }
+            .fiesta-marker-status.is-open { background: #20b765; }
+            .fiesta-marker-status.is-closed { background: #e03737; }
+        </style>
+    
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_91cbd64770bbd6d4eab117183536c8f4 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+    <script>
+    window.fiestaSelectTienda = function(id) {
+        window.location.hash = 'tienda=' + id;
+    };
+    </script>
+    
+    
+            <div class="folium-map" id="map_91cbd64770bbd6d4eab117183536c8f4" ></div>
+        
+</body>
+<script>
+    
+    setTimeout(function() {if (typeof marker_c65617448c9d3120363248296b052bdf !== 'undefined') {marker_c65617448c9d3120363248296b052bdf.on('contextmenu', function() {L.popup({maxWidth:250}).setLatLng(this.getLatLng()).setContent('<div style=\'font-family:Arial;text-align:center;\'><b>Crisydulce</b><br><div style=\'width:220px;height:140px;background:#eeeeee;display:flex;align-items:center;justify-content:center;\'>Sin foto de fachada</div></div>').openOn(map_91cbd64770bbd6d4eab117183536c8f4);});}}, 0);
+    setTimeout(function() {if (typeof marker_2c54b4a24963201e06f49e5e3e1faba9 !== 'undefined') {marker_2c54b4a24963201e06f49e5e3e1faba9.on('contextmenu', function() {L.popup({maxWidth:250}).setLatLng(this.getLatLng()).setContent('<div style=\'font-family:Arial;text-align:center;\'><b>Crisydulce</b><br><div style=\'width:220px;height:140px;background:#eeeeee;display:flex;align-items:center;justify-content:center;\'>Sin foto de fachada</div></div>').openOn(map_91cbd64770bbd6d4eab117183536c8f4);});}}, 0);
+    setTimeout(function() {if (typeof marker_0cca08780fa3c270e5c6f0c4c9a89f62 !== 'undefined') {marker_0cca08780fa3c270e5c6f0c4c9a89f62.on('contextmenu', function() {L.popup({maxWidth:250}).setLatLng(this.getLatLng()).setContent('<div style=\'font-family:Arial;text-align:center;\'><b>Decoraciones Fantasía</b><br><div style=\'width:220px;height:140px;background:#eeeeee;display:flex;align-items:center;justify-content:center;\'>Sin foto de fachada</div></div>').openOn(map_91cbd64770bbd6d4eab117183536c8f4);});}}, 0);
+    setTimeout(function() {if (typeof marker_b747c0030c1f16bfe9e40f33718001d6 !== 'undefined') {marker_b747c0030c1f16bfe9e40f33718001d6.on('contextmenu', function() {L.popup({maxWidth:250}).setLatLng(this.getLatLng()).setContent('<div style=\'font-family:Arial;text-align:center;\'><b>Dulsura Brava</b><br><div style=\'width:220px;height:140px;background:#eeeeee;display:flex;align-items:center;justify-content:center;\'>Sin foto de fachada</div></div>').openOn(map_91cbd64770bbd6d4eab117183536c8f4);});}}, 0);
+    setTimeout(function() {if (typeof marker_158462851f01aee231bcd867ed468820 !== 'undefined') {marker_158462851f01aee231bcd867ed468820.on('contextmenu', function() {L.popup({maxWidth:250}).setLatLng(this.getLatLng()).setContent('<div style=\'font-family:Arial;text-align:center;\'><b>Juguetería Mágica</b><br><div style=\'width:220px;height:140px;background:#eeeeee;display:flex;align-items:center;justify-content:center;\'>Sin foto de fachada</div></div>').openOn(map_91cbd64770bbd6d4eab117183536c8f4);});}}, 0);
+    setTimeout(function() {if (typeof marker_9f1d3cd549bda356a2e7586f63556f31 !== 'undefined') {marker_9f1d3cd549bda356a2e7586f63556f31.on('contextmenu', function() {L.popup({maxWidth:250}).setLatLng(this.getLatLng()).setContent('<div style=\'font-family:Arial;text-align:center;\'><b>Mundo Dulce &amp; Piñatas</b><br><div style=\'width:220px;height:140px;background:#eeeeee;display:flex;align-items:center;justify-content:center;\'>Sin foto de fachada</div></div>').openOn(map_91cbd64770bbd6d4eab117183536c8f4);});}}, 0);
+    setTimeout(function() {if (typeof marker_10ca8dda7cffa1b7768c9a35221d7f59 !== 'undefined') {marker_10ca8dda7cffa1b7768c9a35221d7f59.on('contextmenu', function() {L.popup({maxWidth:250}).setLatLng(this.getLatLng()).setContent('<div style=\'font-family:Arial;text-align:center;\'><b>Pastelería El Castillo</b><br><div style=\'width:220px;height:140px;background:#eeeeee;display:flex;align-items:center;justify-content:center;\'>Sin foto de fachada</div></div>').openOn(map_91cbd64770bbd6d4eab117183536c8f4);});}}, 0);
+    setTimeout(function() {if (typeof marker_a451c662c854cf8ae3319da0bfb2e9f7 !== 'undefined') {marker_a451c662c854cf8ae3319da0bfb2e9f7.on('contextmenu', function() {L.popup({maxWidth:250}).setLatLng(this.getLatLng()).setContent('<div style=\'font-family:Arial;text-align:center;\'><b>Tortería La Dulce Villa</b><br><div style=\'width:220px;height:140px;background:#eeeeee;display:flex;align-items:center;justify-content:center;\'>Sin foto de fachada</div></div>').openOn(map_91cbd64770bbd6d4eab117183536c8f4);});}}, 0);
+    
+    window.fiestaClearRoadRoute = function() {
+        if (window.fiestaRoadRouteLayer) {
+            map_91cbd64770bbd6d4eab117183536c8f4.removeLayer(window.fiestaRoadRouteLayer);
+            window.fiestaRoadRouteLayer = null;
+        }
+    };
+    window.fiestaDrawRoadRoute = function(points) {
+        window.fiestaClearRoadRoute();
+        if (!Array.isArray(points) || points.length < 2) return;
+        window.fiestaRoadRouteLayer = L.layerGroup().addTo(map_91cbd64770bbd6d4eab117183536c8f4);
+        var bounds = L.latLngBounds(points);
+        L.polyline(points, {color: "#ffffff", weight: 10, opacity: 0.95, lineCap: "round", lineJoin: "round"})
+            .addTo(window.fiestaRoadRouteLayer);
+        L.polyline(points, {color: "#0878f9", weight: 6, opacity: 1, lineCap: "round", lineJoin: "round"})
+            .addTo(window.fiestaRoadRouteLayer);
+        map_91cbd64770bbd6d4eab117183536c8f4.fitBounds(bounds, {padding: [42, 42], maxZoom: 17});
+    };
+    window.fiestaSetDeliveryPointPicker = function(enabled) {
+        window.fiestaDeliveryPointPickerActive = Boolean(enabled);
+    };
+    setTimeout(function() {
+        map_91cbd64770bbd6d4eab117183536c8f4.on("click", function(event) {
+            if (!window.fiestaDeliveryPointPickerActive) return;
+            window.fiestaDeliveryPointPickerActive = false;
+            var point = event.latlng;
+            L.marker(point).addTo(map_91cbd64770bbd6d4eab117183536c8f4).bindPopup("Punto de entrega elegido").openPopup();
+            window.location.hash = "delivery-point=" + point.lat.toFixed(6) + "," + point.lng.toFixed(6);
+        });
+    }, 0);
+    
+    
+            var map_91cbd64770bbd6d4eab117183536c8f4 = L.map(
+                "map_91cbd64770bbd6d4eab117183536c8f4",
+                {
+                    center: [-12.046, -77.0305],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 14,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+            L.control.scale().addTo(map_91cbd64770bbd6d4eab117183536c8f4);
+
+            
+
+        
+    
+            var tile_layer_94475cabeeccaafa212b90610d7f6d2e = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_94475cabeeccaafa212b90610d7f6d2e.addTo(map_91cbd64770bbd6d4eab117183536c8f4);
+        
+    
+            var marker_c65617448c9d3120363248296b052bdf = L.marker(
+                [-8.072218, -79.05092],
+                {}
+            ).addTo(map_91cbd64770bbd6d4eab117183536c8f4);
+        
+    
+            var div_icon_5da1737ce4c06da9b77a0aedc205ec64 = L.divIcon({"className": "fiesta-marker-wrapper", "html": "\u003cdiv class=\"fiesta-marker-shell\"\u003e\u003cdiv class=\"fiesta-marker-pin\" style=\"background:#d84a4a\"\u003e\u003ci class=\"fa fa-birthday-cake\" aria-hidden=\"true\"\u003e\u003c/i\u003e\u003cspan class=\"fiesta-marker-status is-open\" title=\"Abierta\"\u003e\u003c/span\u003e\u003c/div\u003e\u003c/div\u003e", "iconAnchor": [19, 42], "iconSize": [38, 44], "popupAnchor": [0, -38]});
+            marker_c65617448c9d3120363248296b052bdf.setIcon(div_icon_5da1737ce4c06da9b77a0aedc205ec64);
+        
+    
+        var popup_4dae0d7d452ad921d477f7efbb47e6e1 = L.popup({"maxWidth": 220});
+
+        
+            
+                var html_b61efa757f62fcdc9b269dc6283d85d8 = $(`<div id="html_b61efa757f62fcdc9b269dc6283d85d8" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 180px;">             <h4 style="margin: 0 0 6px 0;"><b>Crisydulce</b></h4>             <p style="margin: 2px 0;"><b>Categoría:</b> Torterías</p>             <p style="margin: 2px 0;"><b>Dirección:</b> -</p>             <p style="margin: 2px 0;color:#228553;"><b>Estado: Abierta</b></p>             <button onclick="window.location.hash='tienda=3'"                     style="background:#25D366;color:white;padding:6px 10px;                            border:none;border-radius:4px;cursor:pointer;                            margin-top:6px;width:100%;font-weight:bold;">                 Ver Catálogo             </button>         </div>         </div>`)[0];
+                popup_4dae0d7d452ad921d477f7efbb47e6e1.setContent(html_b61efa757f62fcdc9b269dc6283d85d8);
+            
+        
+
+        marker_c65617448c9d3120363248296b052bdf.bindPopup(popup_4dae0d7d452ad921d477f7efbb47e6e1)
+        ;
+
+        
+    
+    
+            marker_c65617448c9d3120363248296b052bdf.bindTooltip(
+                `<div>
+                     Crisydulce (Torterías) · Abierta
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_2c54b4a24963201e06f49e5e3e1faba9 = L.marker(
+                [-8.073006, -79.052937],
+                {}
+            ).addTo(map_91cbd64770bbd6d4eab117183536c8f4);
+        
+    
+            var div_icon_151789100512afc31881da50908df252 = L.divIcon({"className": "fiesta-marker-wrapper", "html": "\u003cdiv class=\"fiesta-marker-shell\"\u003e\u003cdiv class=\"fiesta-marker-pin\" style=\"background:#d84a4a\"\u003e\u003ci class=\"fa fa-birthday-cake\" aria-hidden=\"true\"\u003e\u003c/i\u003e\u003cspan class=\"fiesta-marker-status is-open\" title=\"Abierta\"\u003e\u003c/span\u003e\u003c/div\u003e\u003c/div\u003e", "iconAnchor": [19, 42], "iconSize": [38, 44], "popupAnchor": [0, -38]});
+            marker_2c54b4a24963201e06f49e5e3e1faba9.setIcon(div_icon_151789100512afc31881da50908df252);
+        
+    
+        var popup_343a61d361c38afaf510e552699a0b51 = L.popup({"maxWidth": 220});
+
+        
+            
+                var html_db7eebec8e67cbb9d695e8a4aec4ea39 = $(`<div id="html_db7eebec8e67cbb9d695e8a4aec4ea39" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 180px;">             <h4 style="margin: 0 0 6px 0;"><b>Crisydulce</b></h4>             <p style="margin: 2px 0;"><b>Categoría:</b> Torterías</p>             <p style="margin: 2px 0;"><b>Dirección:</b> -</p>             <p style="margin: 2px 0;color:#228553;"><b>Estado: Abierta</b></p>             <button onclick="window.location.hash='tienda=17'"                     style="background:#25D366;color:white;padding:6px 10px;                            border:none;border-radius:4px;cursor:pointer;                            margin-top:6px;width:100%;font-weight:bold;">                 Ver Catálogo             </button>         </div>         </div>`)[0];
+                popup_343a61d361c38afaf510e552699a0b51.setContent(html_db7eebec8e67cbb9d695e8a4aec4ea39);
+            
+        
+
+        marker_2c54b4a24963201e06f49e5e3e1faba9.bindPopup(popup_343a61d361c38afaf510e552699a0b51)
+        ;
+
+        
+    
+    
+            marker_2c54b4a24963201e06f49e5e3e1faba9.bindTooltip(
+                `<div>
+                     Crisydulce (Torterías) · Abierta
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_0cca08780fa3c270e5c6f0c4c9a89f62 = L.marker(
+                [-12.082, -77.034],
+                {}
+            ).addTo(map_91cbd64770bbd6d4eab117183536c8f4);
+        
+    
+            var div_icon_193c71a89ec900faa3c2dd093b63b16d = L.divIcon({"className": "fiesta-marker-wrapper", "html": "\u003cdiv class=\"fiesta-marker-shell\"\u003e\u003cdiv class=\"fiesta-marker-pin\" style=\"background:#855ea7\"\u003e\u003ci class=\"fa fa-balloon\" aria-hidden=\"true\"\u003e\u003c/i\u003e\u003cspan class=\"fiesta-marker-status is-open\" title=\"Abierta\"\u003e\u003c/span\u003e\u003c/div\u003e\u003c/div\u003e", "iconAnchor": [19, 42], "iconSize": [38, 44], "popupAnchor": [0, -38]});
+            marker_0cca08780fa3c270e5c6f0c4c9a89f62.setIcon(div_icon_193c71a89ec900faa3c2dd093b63b16d);
+        
+    
+        var popup_d62cee8bd11cc089582fec43e7efabb8 = L.popup({"maxWidth": 220});
+
+        
+            
+                var html_6641d3e1f3aab49e9ae4cbc7593ad968 = $(`<div id="html_6641d3e1f3aab49e9ae4cbc7593ad968" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 180px;">             <h4 style="margin: 0 0 6px 0;"><b>Decoraciones Fantasía</b></h4>             <p style="margin: 2px 0;"><b>Categoría:</b> Decoraciones</p>             <p style="margin: 2px 0;"><b>Dirección:</b> Av. Luces 202</p>             <p style="margin: 2px 0;color:#228553;"><b>Estado: Abierta</b></p>             <button onclick="window.location.hash='tienda=5'"                     style="background:#25D366;color:white;padding:6px 10px;                            border:none;border-radius:4px;cursor:pointer;                            margin-top:6px;width:100%;font-weight:bold;">                 Ver Catálogo             </button>         </div>         </div>`)[0];
+                popup_d62cee8bd11cc089582fec43e7efabb8.setContent(html_6641d3e1f3aab49e9ae4cbc7593ad968);
+            
+        
+
+        marker_0cca08780fa3c270e5c6f0c4c9a89f62.bindPopup(popup_d62cee8bd11cc089582fec43e7efabb8)
+        ;
+
+        
+    
+    
+            marker_0cca08780fa3c270e5c6f0c4c9a89f62.bindTooltip(
+                `<div>
+                     Decoraciones Fantasía (Decoraciones) · Abierta
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_b747c0030c1f16bfe9e40f33718001d6 = L.marker(
+                [-8.072427, -79.05133],
+                {}
+            ).addTo(map_91cbd64770bbd6d4eab117183536c8f4);
+        
+    
+            var div_icon_ed3a9902756c2209051a4c341b26e091 = L.divIcon({"className": "fiesta-marker-wrapper", "html": "\u003cdiv class=\"fiesta-marker-shell\"\u003e\u003cdiv class=\"fiesta-marker-pin\" style=\"background:#d84a4a\"\u003e\u003ci class=\"fa fa-birthday-cake\" aria-hidden=\"true\"\u003e\u003c/i\u003e\u003cspan class=\"fiesta-marker-status is-open\" title=\"Abierta\"\u003e\u003c/span\u003e\u003c/div\u003e\u003c/div\u003e", "iconAnchor": [19, 42], "iconSize": [38, 44], "popupAnchor": [0, -38]});
+            marker_b747c0030c1f16bfe9e40f33718001d6.setIcon(div_icon_ed3a9902756c2209051a4c341b26e091);
+        
+    
+        var popup_958e81a67a6021cdc83c163716ce287a = L.popup({"maxWidth": 220});
+
+        
+            
+                var html_c6e9a78a90d0d3cbc651a293816ce27c = $(`<div id="html_c6e9a78a90d0d3cbc651a293816ce27c" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 180px;">             <h4 style="margin: 0 0 6px 0;"><b>Dulsura Brava</b></h4>             <p style="margin: 2px 0;"><b>Categoría:</b> Torterías</p>             <p style="margin: 2px 0;"><b>Dirección:</b> Calle Fiesta 303</p>             <p style="margin: 2px 0;color:#228553;"><b>Estado: Abierta</b></p>             <button onclick="window.location.hash='tienda=7'"                     style="background:#25D366;color:white;padding:6px 10px;                            border:none;border-radius:4px;cursor:pointer;                            margin-top:6px;width:100%;font-weight:bold;">                 Ver Catálogo             </button>         </div>         </div>`)[0];
+                popup_958e81a67a6021cdc83c163716ce287a.setContent(html_c6e9a78a90d0d3cbc651a293816ce27c);
+            
+        
+
+        marker_b747c0030c1f16bfe9e40f33718001d6.bindPopup(popup_958e81a67a6021cdc83c163716ce287a)
+        ;
+
+        
+    
+    
+            marker_b747c0030c1f16bfe9e40f33718001d6.bindTooltip(
+                `<div>
+                     Dulsura Brava (Torterías) · Abierta
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_158462851f01aee231bcd867ed468820 = L.marker(
+                [-12.0875, -77.03],
+                {}
+            ).addTo(map_91cbd64770bbd6d4eab117183536c8f4);
+        
+    
+            var div_icon_5a8575bf13c1858b4cadfbee42a3566f = L.divIcon({"className": "fiesta-marker-wrapper", "html": "\u003cdiv class=\"fiesta-marker-shell\"\u003e\u003cdiv class=\"fiesta-marker-pin\" style=\"background:#397fc1\"\u003e\u003ci class=\"fa fa-gamepad\" aria-hidden=\"true\"\u003e\u003c/i\u003e\u003cspan class=\"fiesta-marker-status is-open\" title=\"Abierta\"\u003e\u003c/span\u003e\u003c/div\u003e\u003c/div\u003e", "iconAnchor": [19, 42], "iconSize": [38, 44], "popupAnchor": [0, -38]});
+            marker_158462851f01aee231bcd867ed468820.setIcon(div_icon_5a8575bf13c1858b4cadfbee42a3566f);
+        
+    
+        var popup_4dbf065a3258e1b4d146d72b7dd60d21 = L.popup({"maxWidth": 220});
+
+        
+            
+                var html_5c3e23f8304569125b8ed48ce68d085e = $(`<div id="html_5c3e23f8304569125b8ed48ce68d085e" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 180px;">             <h4 style="margin: 0 0 6px 0;"><b>Juguetería Mágica</b></h4>             <p style="margin: 2px 0;"><b>Categoría:</b> Jugueterías</p>             <p style="margin: 2px 0;"><b>Dirección:</b> Calle Alegría 101</p>             <p style="margin: 2px 0;color:#228553;"><b>Estado: Abierta</b></p>             <button onclick="window.location.hash='tienda=4'"                     style="background:#25D366;color:white;padding:6px 10px;                            border:none;border-radius:4px;cursor:pointer;                            margin-top:6px;width:100%;font-weight:bold;">                 Ver Catálogo             </button>         </div>         </div>`)[0];
+                popup_4dbf065a3258e1b4d146d72b7dd60d21.setContent(html_5c3e23f8304569125b8ed48ce68d085e);
+            
+        
+
+        marker_158462851f01aee231bcd867ed468820.bindPopup(popup_4dbf065a3258e1b4d146d72b7dd60d21)
+        ;
+
+        
+    
+    
+            marker_158462851f01aee231bcd867ed468820.bindTooltip(
+                `<div>
+                     Juguetería Mágica (Jugueterías) · Abierta
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_9f1d3cd549bda356a2e7586f63556f31 = L.marker(
+                [-12.084, -77.038],
+                {}
+            ).addTo(map_91cbd64770bbd6d4eab117183536c8f4);
+        
+    
+            var div_icon_1dcd3f3c698ee9b0faadaca9e0c09d70 = L.divIcon({"className": "fiesta-marker-wrapper", "html": "\u003cdiv class=\"fiesta-marker-shell\"\u003e\u003cdiv class=\"fiesta-marker-pin\" style=\"background:#d78332\"\u003e\u003ci class=\"fa fa-candy-cane\" aria-hidden=\"true\"\u003e\u003c/i\u003e\u003cspan class=\"fiesta-marker-status is-open\" title=\"Abierta\"\u003e\u003c/span\u003e\u003c/div\u003e\u003c/div\u003e", "iconAnchor": [19, 42], "iconSize": [38, 44], "popupAnchor": [0, -38]});
+            marker_9f1d3cd549bda356a2e7586f63556f31.setIcon(div_icon_1dcd3f3c698ee9b0faadaca9e0c09d70);
+        
+    
+        var popup_aaa7ee8d2781447fdbdfa78291d1aed2 = L.popup({"maxWidth": 220});
+
+        
+            
+                var html_60cef85a3977003b7a18d6a1eb605d9c = $(`<div id="html_60cef85a3977003b7a18d6a1eb605d9c" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 180px;">             <h4 style="margin: 0 0 6px 0;"><b>Mundo Dulce &amp; Piñatas</b></h4>             <p style="margin: 2px 0;"><b>Categoría:</b> Dulcerías</p>             <p style="margin: 2px 0;"><b>Dirección:</b> Av. Fiestas 789</p>             <p style="margin: 2px 0;color:#228553;"><b>Estado: Abierta</b></p>             <button onclick="window.location.hash='tienda=9'"                     style="background:#25D366;color:white;padding:6px 10px;                            border:none;border-radius:4px;cursor:pointer;                            margin-top:6px;width:100%;font-weight:bold;">                 Ver Catálogo             </button>         </div>         </div>`)[0];
+                popup_aaa7ee8d2781447fdbdfa78291d1aed2.setContent(html_60cef85a3977003b7a18d6a1eb605d9c);
+            
+        
+
+        marker_9f1d3cd549bda356a2e7586f63556f31.bindPopup(popup_aaa7ee8d2781447fdbdfa78291d1aed2)
+        ;
+
+        
+    
+    
+            marker_9f1d3cd549bda356a2e7586f63556f31.bindTooltip(
+                `<div>
+                     Mundo Dulce & Piñatas (Dulcerías) · Abierta
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_10ca8dda7cffa1b7768c9a35221d7f59 = L.marker(
+                [-12.089, -77.032],
+                {}
+            ).addTo(map_91cbd64770bbd6d4eab117183536c8f4);
+        
+    
+            var div_icon_fccf6786bf6a47e7ec7ebd2c5ca4800f = L.divIcon({"className": "fiesta-marker-wrapper", "html": "\u003cdiv class=\"fiesta-marker-shell\"\u003e\u003cdiv class=\"fiesta-marker-pin\" style=\"background:#d84a4a\"\u003e\u003ci class=\"fa fa-birthday-cake\" aria-hidden=\"true\"\u003e\u003c/i\u003e\u003cspan class=\"fiesta-marker-status is-open\" title=\"Abierta\"\u003e\u003c/span\u003e\u003c/div\u003e\u003c/div\u003e", "iconAnchor": [19, 42], "iconSize": [38, 44], "popupAnchor": [0, -38]});
+            marker_10ca8dda7cffa1b7768c9a35221d7f59.setIcon(div_icon_fccf6786bf6a47e7ec7ebd2c5ca4800f);
+        
+    
+        var popup_244d81de98d26a97e5baef8409324250 = L.popup({"maxWidth": 220});
+
+        
+            
+                var html_1d95eb159d7d6bd2d497226ed6f378df = $(`<div id="html_1d95eb159d7d6bd2d497226ed6f378df" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 180px;">             <h4 style="margin: 0 0 6px 0;"><b>Pastelería El Castillo</b></h4>             <p style="margin: 2px 0;"><b>Categoría:</b> Torterías</p>             <p style="margin: 2px 0;"><b>Dirección:</b> Calle Los Confites 456</p>             <p style="margin: 2px 0;color:#228553;"><b>Estado: Abierta</b></p>             <button onclick="window.location.hash='tienda=2'"                     style="background:#25D366;color:white;padding:6px 10px;                            border:none;border-radius:4px;cursor:pointer;                            margin-top:6px;width:100%;font-weight:bold;">                 Ver Catálogo             </button>         </div>         </div>`)[0];
+                popup_244d81de98d26a97e5baef8409324250.setContent(html_1d95eb159d7d6bd2d497226ed6f378df);
+            
+        
+
+        marker_10ca8dda7cffa1b7768c9a35221d7f59.bindPopup(popup_244d81de98d26a97e5baef8409324250)
+        ;
+
+        
+    
+    
+            marker_10ca8dda7cffa1b7768c9a35221d7f59.bindTooltip(
+                `<div>
+                     Pastelería El Castillo (Torterías) · Abierta
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_a451c662c854cf8ae3319da0bfb2e9f7 = L.marker(
+                [-12.0864, -77.0358],
+                {}
+            ).addTo(map_91cbd64770bbd6d4eab117183536c8f4);
+        
+    
+            var div_icon_556525aab79ec5c44e2b2a876fcb0356 = L.divIcon({"className": "fiesta-marker-wrapper", "html": "\u003cdiv class=\"fiesta-marker-shell\"\u003e\u003cdiv class=\"fiesta-marker-pin\" style=\"background:#d84a4a\"\u003e\u003ci class=\"fa fa-birthday-cake\" aria-hidden=\"true\"\u003e\u003c/i\u003e\u003cspan class=\"fiesta-marker-status is-open\" title=\"Abierta\"\u003e\u003c/span\u003e\u003c/div\u003e\u003c/div\u003e", "iconAnchor": [19, 42], "iconSize": [38, 44], "popupAnchor": [0, -38]});
+            marker_a451c662c854cf8ae3319da0bfb2e9f7.setIcon(div_icon_556525aab79ec5c44e2b2a876fcb0356);
+        
+    
+        var popup_1f2f6f8d424271d179a91f49a01fe028 = L.popup({"maxWidth": 220});
+
+        
+            
+                var html_f6221665ee78cd8ea65b6eeb8d85d79b = $(`<div id="html_f6221665ee78cd8ea65b6eeb8d85d79b" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 180px;">             <h4 style="margin: 0 0 6px 0;"><b>Tortería La Dulce Villa</b></h4>             <p style="margin: 2px 0;"><b>Categoría:</b> Torterías</p>             <p style="margin: 2px 0;"><b>Dirección:</b> Av. Principal 123</p>             <p style="margin: 2px 0;color:#228553;"><b>Estado: Abierta</b></p>             <button onclick="window.location.hash='tienda=1'"                     style="background:#25D366;color:white;padding:6px 10px;                            border:none;border-radius:4px;cursor:pointer;                            margin-top:6px;width:100%;font-weight:bold;">                 Ver Catálogo             </button>         </div>         </div>`)[0];
+                popup_1f2f6f8d424271d179a91f49a01fe028.setContent(html_f6221665ee78cd8ea65b6eeb8d85d79b);
+            
+        
+
+        marker_a451c662c854cf8ae3319da0bfb2e9f7.bindPopup(popup_1f2f6f8d424271d179a91f49a01fe028)
+        ;
+
+        
+    
+    
+            marker_a451c662c854cf8ae3319da0bfb2e9f7.bindTooltip(
+                `<div>
+                     Tortería La Dulce Villa (Torterías) · Abierta
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>
+</html>

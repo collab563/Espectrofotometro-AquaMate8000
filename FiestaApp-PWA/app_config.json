@@ -1,0 +1,12 @@
+{
+  "theme": "dark",
+  "map_center_lat": -12.046,
+  "map_center_lng": -77.0305,
+  "map_zoom": 14,
+  "app_title": "🎈 Directorio de Fiestas y Eventos",
+  "auto_open_whatsapp": true,
+  "admin_password": "admin123",
+  "radius_km": 0.6,
+  "radius_filter_enabled": false,
+  "customer_order_token": "o6zqVwdBiTkQl_l3ojzvzJ_oLHEtLkAue8UcM3dDGIQ"
+}
