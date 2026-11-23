@@ -1,6 +1,0 @@
-PyQt6==6.7.1
-PyQt6-WebEngine==6.7.0
-folium==0.16.0
-branca==0.7.2
-fastapi>=0.115,<1.0
-uvicorn>=0.34,<1.0
